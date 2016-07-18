@@ -21,9 +21,21 @@
     <ClCompile Include="Tokenizer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Treenode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Operator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Tokenizer.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Treenode.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Operator.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
   </ItemGroup>
