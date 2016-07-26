@@ -1,57 +1,26 @@
-#ifndef H_TOKENIZER
-#define H_TOKENIZER
+#pragma once
 
-#include <string>
-using namespace std;
-//Chars
-
-//Type of operand
-#define NUMERIC_TYPE 1
-#define UNKNOWN_TYPE 2 // (eg: 10a, 19ab)
-#define TREENODE_TYPE 3
-#define PUNCT_TYPE 4 // .+-/*%^
-#define SPACE_TYPE 5 // ' '
-#define PARHL_TYPE 6 // (
-#define PARHR_TYPE 7 // )
-
-// Type of Operators
-#define SUM_OPERATOR 1
-#define DIV_OPERATOR 2
-#define LES_OPERATOR 3
-#define MUL_OPERATOR 4
-
-// Operator's factor
-// 
-// This will be used in BinaryTree to 
-// make decisions
-//
-#define SUM_OPERATOR_PREC 1
-#define DIV_OPERATOR_PREC 2
-#define LES_OPERATOR_PREC 1
-#define MUL_OPERATOR_PREC 2
-
-#include "Treenode.h"
 #include "Operator.h"
+#include "Operand.h"
+#include <string>
 
-/* *
-* Class Tokenizer
-*
-* Tokenize the math query
-*/
-class Tokenizer
-{
-private:
-	TreeNode* token;
-public:
-	Tokenizer(string query);
-	~Tokenizer(void);
-	TreeNode* parseExpression(string query);
-	void setToken(TreeNode* token);
-	TreeNode* getToken() {
-		return this->token;
-	}
+#define OP_TYPE_UNKNOWS 1
+#define OP_TYPE_DIGITS 2
+
+#define RIGHT_POSITION 1
+#define LEFT_POSITION 2
+
+struct DataStruct {
+	std::string digits;
+	std::string unkows;
+	int type = OP_TYPE_DIGITS;
 };
 
-
-
-#endif // !H_TOKENIZER
+class Tokenizer {
+	private:
+		OperadorBin* compareFactorOperator(OperadorBin* leftOperador, OperadorBin* rightOperador, Operand *op);
+	public:
+		Tokenizer(void) {}
+		virtual ~Tokenizer(void) {};
+		Result* parse(std::string s);
+};
