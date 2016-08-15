@@ -8,6 +8,7 @@ using namespace std;
 
 Operand* dataToOperand(DataStruct *data) {
 	double d = atof(data->digits.c_str());
+	data = new DataStruct;
 	return new Operand(d);
 };
 
@@ -25,7 +26,97 @@ OperadorBin* Tokenizer::compareFactorOperator(OperadorBin* leftOperador, Operado
 	}
 };
 
+OperadorBin* Tokenizer::makeOperator(OperadorBin* currentOperation, Operand* op, char operandType) {
+	return currentOperation;
+};
 
+Result * Tokenizer::parse(std::string s) {
+
+	std::string::size_type i = 0, length = s.size();
+	std::string C_OPERATORS_SYMBOLS = "+-^*/ ";
+	int state = OPERAND_STATE;
+	std::locale loc;
+	DataStruct* _operand = new DataStruct;
+
+	OperadorBin* currentOperation = NULL;
+	OperadorBin* tmpOperation = NULL;
+	int factor = 0;
+
+	do {
+		if (state == OPERAND_STATE) {
+
+			//Check next character
+			if ((i + 1 <= length)) {
+				//Check if the next char is a operator or space
+				if (C_OPERATORS_SYMBOLS.find(s[i]) != string::npos && 
+					(_operand->unknows.size() > 0 || _operand->digits.size() > 0)) {
+					state = OPERATOR_STATE;
+				}
+			}
+
+			//Digits
+			if (std::isdigit(s[i], loc))
+			{
+				if (_operand->type == OP_TYPE_DIGITS) {
+					_operand->digits += s[i];
+				}
+				else {
+					//logic to 2a2b (for example)
+				}
+			}
+			//Chars
+			else if (std::isalpha(s[i], loc))
+			{
+				_operand->unknows += s[i];
+				_operand->type = OP_TYPE_UNKNOWS;
+			}
+		}
+		else if (state == OPERATOR_STATE) {
+			if (s[i] == ' ') {
+				i++;
+				continue;
+			}
+			switch (s[i]) {
+				case '+':
+					tmpOperation = new Soma(factor);
+					break;
+
+				case '-':
+					tmpOperation = new Subtracao(factor);
+					break;
+
+				case '/':
+					tmpOperation = new Divisao(factor);
+					break;
+
+				case '*':
+					tmpOperation = new Multiplicacao(factor);
+					break;
+
+				default:										
+					throw std::domain_error("Invalid symbol!");
+					break;
+			}
+			state = OPERAND_STATE;
+			//First Operation
+			if (currentOperation == NULL) {
+				currentOperation = tmpOperation;
+				currentOperation->setLeft(dataToOperand(_operand));
+			}
+			else {
+				this->compareFactorOperator(currentOperation, tmpOperation, dataToOperand(_operand));
+				currentOperation = tmpOperation;
+			}
+			_operand = new DataStruct;
+		}
+		i++;
+	} while (i < length);
+	
+
+	return {};
+}
+
+/*
 Result* Tokenizer::parse(std::string s)
 {
 
@@ -37,7 +128,7 @@ Result* Tokenizer::parse(std::string s)
 	string tmp = string();
 	OperadorBin* currentOperation = NULL;
 	OperadorBin* tmpOperation = NULL;
-	DataStruct* _tmp = new DataStruct;
+	
 
 	for (std::string::size_type i = 0; i < s.size(); ++i) {
 		q = s[i];
@@ -109,3 +200,4 @@ Result* Tokenizer::parse(std::string s)
 	r->setRight(currentOperation);
 	return r;
 }
+*/
